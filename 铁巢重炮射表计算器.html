@@ -170,6 +170,7 @@
             background-color: #27ae60;
             color: white;
             border-color: #1e8449;
+            font-size: 15px;
         }
 
         .trajectory-actions {
@@ -661,7 +662,7 @@ function renderTrajectory(trajectory, index) {
                 <span>弹道 #${index + 1}</span>
                 <span class="info-tag info-tag-distance">${trajectory.distance} km</span>
                 <span class="info-tag info-tag-angle">${trajectory.angle.toFixed(2)}°</span>
-                <span class="info-tag info-tag-charge">装药${trajectory.charge}</span>
+                <span class="info-tag info-tag-charge">装药 ${trajectory.charge}</span>
             </div>
             <div class="trajectory-actions">
                 <button class="btn btn-danger btn-delete" data-id="${trajectory.id}">×</button>
@@ -749,7 +750,7 @@ function updateTrajectoryUI(id) {
         <span>弹道 #${index + 1}</span>
         <span class="info-tag info-tag-distance">${trajectory.distance} km</span>
         <span class="info-tag info-tag-angle">${trajectory.angle.toFixed(2)}°</span>
-        <span class="info-tag info-tag-charge">装药${trajectory.charge}</span>
+        <span class="info-tag info-tag-charge">装药 ${trajectory.charge}</span>
     `;
 
     // 更新结果区
