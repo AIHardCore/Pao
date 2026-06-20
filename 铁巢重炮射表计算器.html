@@ -605,6 +605,7 @@ function addToHistory(trajectory) {
     const record = {
         id: trajectory.id,
         distance: trajectory.distance,
+        azimuth: trajectory.azimuth,
         charge: trajectory.charge,
         angle: trajectory.angle,
         createdAt: trajectory.createdAt
@@ -670,6 +671,11 @@ function renderTrajectory(trajectory, index) {
         </div>
         <div class="trajectory-content">
             <div class="trajectory-body">
+                <div class="form-group">
+                    <label>方位角 (度):</label>
+                    <input type="number" class="input-azimuth" value="${trajectory.azimuth || ''}"
+                           placeholder="例如: 45" step="1" min="0" max="360" data-id="${trajectory.id}">
+                </div>
                 <div class="form-group">
                     <label>输入目标距离 (KM):</label>
                     <input type="number" class="input-distance" value="${trajectory.distance || ''}"
@@ -786,6 +792,7 @@ function createTrajectory(initialData = null) {
     const trajectory = {
         id,
         distance: initialData?.distance || 0,
+        azimuth: initialData?.azimuth || 0,
         charge: initialData?.charge || 1,
         angle: initialData?.angle || 0,
         forceCharge6: initialData?.forceCharge6 || false,
@@ -931,6 +938,18 @@ function attachTrajectoryEvents() {
         };
     });
 
+    // 方位角输入事件
+    document.querySelectorAll('.input-azimuth').forEach(input => {
+        input.oninput = (e) => {
+            const id = input.dataset.id;
+            const azimuth = parseFloat(e.target.value) || 0;
+            const trajectory = trajectories.find(t => t.id === id);
+            if (trajectory) {
+                trajectory.azimuth = azimuth;
+            }
+        };
+    });
+
     // 装药选择事件
     document.querySelectorAll('input[name^="charge-"]').forEach(radio => {
         radio.onchange = (e) => {
@@ -980,7 +999,7 @@ function renderHistoryList() {
     historyList.innerHTML = history.map((h, i) => `
         <div class="history-item" data-index="${i}">
             <div class="history-item-title">弹道 #${i + 1}</div>
-            <div>距离: ${h.distance} km | 装药: ${h.charge}</div>
+            <div>方位角: ${h.azimuth || 0}° | 距离: ${h.distance} km | 装药: ${h.charge}</div>
             <div class="history-item-angle">${h.angle.toFixed(2)}°</div>
             <div class="history-item-meta">${formatTime(h.createdAt)}</div>
         </div>
@@ -993,6 +1012,7 @@ function renderHistoryList() {
             const record = history[index];
             createTrajectory({
                 distance: record.distance,
+                azimuth: record.azimuth,
                 charge: record.charge,
                 angle: record.angle,
                 createdAt: Date.now()
