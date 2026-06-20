@@ -892,9 +892,7 @@ function attachTrajectoryEvents() {
         btn.onclick = (e) => {
             e.stopPropagation();
             const id = btn.dataset.id;
-            if (confirm('确定要删除这条弹道吗？')) {
-                deleteTrajectory(id);
-            }
+            deleteTrajectory(id);
         };
     });
 
