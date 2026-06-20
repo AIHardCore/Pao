@@ -5,20 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>铁巢重炮射表计算器</title>
     <style>
-        /* ==================== 样式变量 ==================== */
+        /* ==================== 样式变量定义 ==================== */
         :root {
-            --bg-color: #f4f7f6;           /* 页面背景色 */
-            --card-bg: #ffffff;            /* 卡片背景色 */
-            --primary-color: #2c3e50;      /* 主要颜色（深蓝灰） */
-            --accent-color: #d35400;       /* 强调色（橙色） */
-            --text-color: #333333;         /* 文字颜色 */
-            --border-color: #e0e0e0;      /* 边框颜色 */
-            --header-bg: #edf2f7;          /* 标题栏背景色 */
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary-color: #2c3e50;
+            --accent-color: #d35400;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --header-bg: #edf2f7;
         }
 
         /* ==================== 基础样式 ==================== */
         * {
-            box-sizing: border-box;         /* 盒模型 */
+            box-sizing: border-box;
         }
 
         body {
@@ -30,7 +30,7 @@
             min-height: 100vh;
         }
 
-        /* ==================== 主容器 ==================== */
+        /* ==================== 主容器样式 ==================== */
         .container {
             background-color: var(--card-bg);
             padding: 30px;
@@ -49,10 +49,10 @@
             padding-bottom: 10px;
         }
 
-        /* ==================== 工具栏 ==================== */
+        /* ==================== 工具栏样式 ==================== */
         .toolbar {
             display: flex;
-            justify-content: space-between; /* 左右分布 */
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
@@ -97,21 +97,20 @@
             background-color: #c0392b;
         }
 
-        /* ==================== 弹道列表 ==================== */
+        /* ==================== 弹道列表样式 ==================== */
         .trajectory-list {
             display: flex;
-            flex-direction: column;     /* 垂直排列 */
+            flex-direction: column;
             gap: 12px;
         }
 
-        /* ==================== 弹道卡片 ==================== */
+        /* ==================== 弹道卡片样式 ==================== */
         .trajectory-card {
             border: 1px solid var(--border-color);
             border-radius: 8px;
             overflow: hidden;
         }
 
-        /* 卡片标题栏 */
         .trajectory-header {
             display: flex;
             justify-content: space-between;
@@ -119,14 +118,13 @@
             padding: 12px 16px;
             background-color: var(--header-bg);
             cursor: pointer;
-            user-select: none;         /* 禁止选择文字 */
+            user-select: none;
         }
 
         .trajectory-header:hover {
             background-color: #e4eaf0;
         }
 
-        /* 标题文字 */
         .trajectory-title {
             font-weight: bold;
             color: var(--primary-color);
@@ -135,17 +133,14 @@
             gap: 8px;
         }
 
-        /* 展开/收起箭头 */
         .trajectory-title .arrow {
-            transition: transform 0.3s;  /* 旋转动画 */
+            transition: transform 0.3s;
         }
 
-        /* 展开状态箭头旋转 */
         .trajectory-card.expanded .trajectory-title .arrow {
             transform: rotate(90deg);
         }
 
-        /* 收起状态的信息标签样式 */
         .trajectory-card:not(.expanded) .trajectory-title {
             gap: 6px;
         }
@@ -158,39 +153,33 @@
             font-weight: bold;
         }
 
-        /* 收起状态的距离标签 - 橙色 */
         .trajectory-card:not(.expanded) .trajectory-title .info-tag-distance {
             background-color: var(--accent-color);
             color: white;
         }
 
-        /* 收起状态的仰角标签 - 深色 */
         .trajectory-card:not(.expanded) .trajectory-title .info-tag-angle {
             background-color: var(--primary-color);
             color: white;
         }
 
-        /* 收起状态的装药标签 - 绿色 */
         .trajectory-card:not(.expanded) .trajectory-title .info-tag-charge {
             background-color: #27ae60;
             color: white;
         }
 
-        /* 卡片操作按钮区 */
         .trajectory-actions {
             display: flex;
             gap: 8px;
             align-items: center;
         }
 
-        /* 卡片内容区（可折叠） */
         .trajectory-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out;  /* 折叠动画 */
+            transition: max-height 0.3s ease-out;
         }
 
-        /* 展开状态 */
         .trajectory-card.expanded .trajectory-content {
             max-height: 500px;
         }
@@ -228,10 +217,10 @@
             background-color: #fff;
         }
 
-        /* ==================== 装药单选按钮组 ==================== */
+        /* ==================== 装药单选按钮组样式 ==================== */
         .radio-group {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);  /* 6列网格 */
+            grid-template-columns: repeat(6, 1fr);
             gap: 6px;
         }
 
@@ -241,7 +230,7 @@
 
         .radio-btn input {
             position: absolute;
-            opacity: 0;              /* 隐藏原生单选框 */
+            opacity: 0;
             width: 0;
             height: 0;
         }
@@ -258,7 +247,6 @@
             transition: all 0.2s;
         }
 
-        /* 选中状态 */
         .radio-btn input:checked + .radio-label {
             background-color: var(--accent-color);
             color: white;
@@ -266,7 +254,6 @@
             font-weight: bold;
         }
 
-        /* 禁用状态 */
         .radio-btn input:disabled + .radio-label {
             background-color: #e0e0e0;
             color: #999;
@@ -279,13 +266,12 @@
             cursor: not-allowed;
         }
 
-        /* 强制装药6复选框 */
         .checkbox-force-charge6 {
             margin-right: 6px;
             transform: scale(1.1);
         }
 
-        /* ==================== 结果显示区 ==================== */
+        /* ==================== 结果显示区样式 ==================== */
         .result-box {
             padding: 16px;
             background-color: #edf2f7;
@@ -296,7 +282,7 @@
         .result-label {
             font-size: 12px;
             color: #4a5568;
-            text-transform: uppercase;   /* 大写字母 */
+            text-transform: uppercase;
             letter-spacing: 1px;
         }
 
@@ -312,9 +298,7 @@
             margin-top: 4px;
         }
 
-        /* ==================== 历史记录侧边栏 ==================== */
-
-        /* 遮罩层 */
+        /* ==================== 历史记录侧边栏样式 ==================== */
         .history-overlay {
             position: fixed;
             top: 0;
@@ -333,11 +317,10 @@
             visibility: visible;
         }
 
-        /* 侧边栏 */
         .history-sidebar {
             position: fixed;
             top: 0;
-            right: -320px;           /* 初始隐藏在右侧 */
+            right: -320px;
             width: 320px;
             height: 100%;
             background: var(--card-bg);
@@ -349,7 +332,7 @@
         }
 
         .history-sidebar.show {
-            right: 0;                 /* 显示侧边栏 */
+            right: 0;
         }
 
         .history-header {
@@ -367,7 +350,7 @@
 
         .history-body {
             flex: 1;
-            overflow-y: auto;        /* 内容区可滚动 */
+            overflow-y: auto;
             padding: 12px;
         }
 
@@ -419,7 +402,7 @@
             flex: 1;
         }
 
-        /* ==================== 空状态 ==================== */
+        /* ==================== 空状态样式 ==================== */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -430,7 +413,7 @@
             margin: 0 0 16px 0;
         }
 
-        /* ==================== 底部提示 ==================== */
+        /* ==================== 底部提示样式 ==================== */
         .hint {
             font-size: 12px;
             color: #718096;
@@ -478,57 +461,49 @@
 </div>
 
 <script>
-/* ==================== 配置 ==================== */
+/* ==================== 配置定义 ==================== */
 // 装药配置表：每种装药的倍数和距离限制
-// factor: 每公里需要的仰角度数
-// max: 根据60度上限计算的最大可用距离
+// factor: 每公里需要的仰角度数（度/公里）
+// max: 根据60度上限计算的最大可用距离（公里）
 const config = {
-    1: { factor: 12.0, min: 0, max: 5 },    // 装药1: 5km内
-    2: { factor: 6.0, min: 5, max: 10 },    // 装药2: 10km内
-    3: { factor: 4.0, min: 10, max: 15 },   // 装药3: 15km内
-    4: { factor: 3.0, min: 15, max: 20 },   // 装药4: 20km内
-    5: { factor: 2.4, min: 20, max: 25 },    // 装药5: 25km内
-    6: { factor: 2.0, min: 25, max: 100 }   // 装药6: 100km内
+    1: { factor: 12.0, min: 0, max: 5 },
+    2: { factor: 6.0, min: 5, max: 10 },
+    3: { factor: 4.0, min: 10, max: 15 },
+    4: { factor: 3.0, min: 15, max: 20 },
+    5: { factor: 2.4, min: 20, max: 25 },
+    6: { factor: 2.0, min: 25, max: 100 }
 };
 
 // localStorage 存储键名
 const STORAGE_KEY = 'trajectory_history';
 
-// 弹道计数器（用于生成唯一ID）
+// 弹道计数器
 let trajectoryCounter = 0;
 
 /* ==================== 状态管理 ==================== */
 // 当前页面所有弹道
 let trajectories = [];
-
 // 历史记录数组
 let history = [];
 
 /* ==================== DOM 元素引用 ==================== */
-const trajectoryList = document.getElementById('trajectory-list');  // 弹道列表容器
-const btnNew = document.getElementById('btn-new');                // 新建按钮
-const btnHistory = document.getElementById('btn-history');         // 历史记录按钮
-const historyOverlay = document.getElementById('history-overlay'); // 遮罩层
-const historySidebar = document.getElementById('history-sidebar'); // 侧边栏
-const historyList = document.getElementById('history-list');      // 历史列表容器
-const btnCloseHistory = document.getElementById('btn-close-history'); // 关闭按钮
-const btnClearHistory = document.getElementById('btn-clear-history'); // 清空按钮
+const trajectoryList = document.getElementById('trajectory-list');
+const btnNew = document.getElementById('btn-new');
+const btnHistory = document.getElementById('btn-history');
+const historyOverlay = document.getElementById('history-overlay');
+const historySidebar = document.getElementById('history-sidebar');
+const historyList = document.getElementById('history-list');
+const btnCloseHistory = document.getElementById('btn-close-history');
+const btnClearHistory = document.getElementById('btn-clear-history');
 
 /* ==================== 工具函数 ==================== */
 
-/**
- * 生成唯一ID
- * 使用时间戳 + 随机字符串确保唯一性
- */
+// 生成唯一ID：使用时间戳 + 随机字符串
 function generateId() {
     return Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
-/**
- * 格式化时间戳为 MM/DD HH:mm 格式
- * @param {number} timestamp - 时间戳
- * @returns {string} 格式化后的时间字符串
- */
+// 格式化时间戳为 MM/DD HH:mm 格式
 function formatTime(timestamp) {
     const d = new Date(timestamp);
     const month = (d.getMonth() + 1).toString().padStart(2, '0');
@@ -542,41 +517,27 @@ function formatTime(timestamp) {
 // 最大仰角限制为60度
 const MAX_ANGLE = 60;
 
-/**
- * 根据60度限制计算指定装药的最大可用距离
- * @param {number} charge - 装药等级(1-6)
- * @returns {number} 最大可用距离(公里)
- */
+// 根据60度限制计算指定装药的最大可用距离
 function calcMaxDist(charge) {
     return MAX_ANGLE / config[charge].factor;
 }
 
 // 根据60度限制更新各装药的最大距离
-config[1].max = calcMaxDist(1);  // 5km
-config[2].max = calcMaxDist(2);  // 10km
-config[3].max = calcMaxDist(3);  // 15km
-config[4].max = calcMaxDist(4);  // 20km
-config[5].max = calcMaxDist(5);  // 25km
-config[6].max = 100;             // 装药6最远100km
+config[1].max = calcMaxDist(1);
+config[2].max = calcMaxDist(2);
+config[3].max = calcMaxDist(3);
+config[4].max = calcMaxDist(4);
+config[5].max = calcMaxDist(5);
+config[6].max = 100;
 
-/**
- * 计算仰角
- * @param {number} distance - 目标距离(公里)
- * @param {number} charge - 装药等级
- * @returns {number} 计算得出的仰角(度)，不超过60度
- */
+// 计算仰角：距离 × 倍率，不超过60度
 function calculateAngle(distance, charge) {
     const factor = config[charge].factor;
     const rawAngle = distance * factor;
-    return Math.min(rawAngle, MAX_ANGLE);  // 限制最大60度
+    return Math.min(rawAngle, MAX_ANGLE);
 }
 
-/**
- * 获取推荐装药等级
- * 根据60度限制，返回指定距离所需的最小装药
- * @param {number} distance - 目标距离(公里)
- * @returns {number} 推荐装药等级(1-6)
- */
+// 获取推荐装药等级：根据60度限制返回所需最小装药
 function getRecommendedCharge(distance) {
     if (distance <= 0) return 1;
     for (let i = 1; i <= 6; i++) {
@@ -589,9 +550,7 @@ function getRecommendedCharge(distance) {
 
 /* ==================== 历史记录存储 ==================== */
 
-/**
- * 从 localStorage 加载历史记录
- */
+// 从 localStorage 加载历史记录
 function loadHistory() {
     try {
         const data = localStorage.getItem(STORAGE_KEY);
@@ -601,9 +560,7 @@ function loadHistory() {
     }
 }
 
-/**
- * 保存历史记录到 localStorage
- */
+// 保存历史记录到 localStorage
 function saveHistory() {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
@@ -612,10 +569,7 @@ function saveHistory() {
     }
 }
 
-/**
- * 添加弹道到历史记录
- * @param {Object} trajectory - 弹道对象
- */
+// 添加弹道到历史记录
 function addToHistory(trajectory) {
     const record = {
         id: trajectory.id,
@@ -624,8 +578,7 @@ function addToHistory(trajectory) {
         angle: trajectory.angle,
         createdAt: trajectory.createdAt
     };
-    history.unshift(record);  // 添加到数组开头
-    // 最多保留50条记录
+    history.unshift(record);
     if (history.length > 50) {
         history = history.slice(0, 50);
     }
@@ -634,25 +587,16 @@ function addToHistory(trajectory) {
 
 /* ==================== 弹道渲染 ==================== */
 
-/**
- * 渲染单个弹道卡片
- * @param {Object} trajectory - 弹道数据对象
- * @param {number} index - 弹道序号
- * @returns {HTMLElement} 弹道卡片元素
- */
+// 渲染单个弹道卡片
 function renderTrajectory(trajectory, index) {
     const card = document.createElement('div');
-    // 根据展开状态设置class
     card.className = 'trajectory-card' + (trajectory.expanded ? ' expanded' : '');
     card.dataset.id = trajectory.id;
 
     // 生成提示文字
     const tipText = getTipText(trajectory.distance, trajectory.charge, trajectory.angle, trajectory.forceCharge6);
 
-    /**
-     * 获取提示文字
-     * 根据不同情况显示不同的提示信息
-     */
+    // 获取提示文字：根据不同情况显示不同的提示信息
     function getTipText(dist, ch, ang, force6) {
         if (force6) {
             return `强制使用装药6计算，仰角${ang.toFixed(2)}°`;
@@ -668,12 +612,10 @@ function renderTrajectory(trajectory, index) {
 
     // 生成卡片HTML
     card.innerHTML = `
-        <!-- 卡片标题栏（可点击展开/收起） -->
         <div class="trajectory-header">
             <div class="trajectory-title">
                 <span class="arrow">▶</span>
                 <span>弹道 #${index + 1}</span>
-                <!-- 收起状态显示的信息标签 -->
                 <span class="info-tag info-tag-distance">${trajectory.distance} km</span>
                 <span class="info-tag info-tag-angle">${trajectory.angle.toFixed(2)}°</span>
                 <span class="info-tag info-tag-charge">装药${trajectory.charge}</span>
@@ -682,26 +624,19 @@ function renderTrajectory(trajectory, index) {
                 <button class="btn btn-danger btn-delete" data-id="${trajectory.id}">×</button>
             </div>
         </div>
-
-        <!-- 卡片内容区（可折叠） -->
         <div class="trajectory-content">
             <div class="trajectory-body">
-                <!-- 距离输入 -->
                 <div class="form-group">
                     <label>输入目标距离 (KM):</label>
                     <input type="number" class="input-distance" value="${trajectory.distance || ''}"
                            placeholder="例如: 12.5" step="0.01" min="0" max="100" data-id="${trajectory.id}">
                 </div>
-
-                <!-- 强制装药6选项 -->
                 <div class="form-group">
                     <label>
                         <input type="checkbox" class="checkbox-force-charge6" data-id="${trajectory.id}" ${trajectory.forceCharge6 ? 'checked' : ''}>
                         强制使用装药6计算（忽略最小装药限制）
                     </label>
                 </div>
-
-                <!-- 装药选择 -->
                 <div class="form-group">
                     <label>选择药包数量 (装药):</label>
                     <div class="radio-group">
@@ -718,8 +653,6 @@ function renderTrajectory(trajectory, index) {
                         `).join('')}
                     </div>
                 </div>
-
-                <!-- 结果显示 -->
                 <div class="result-box">
                     <div class="result-label">计算得出仰角</div>
                     <div class="result-value">${trajectory.angle.toFixed(2)}°</div>
@@ -731,9 +664,7 @@ function renderTrajectory(trajectory, index) {
     return card;
 }
 
-/**
- * 渲染所有弹道卡片
- */
+// 渲染所有弹道卡片
 function renderAllTrajectories() {
     trajectoryList.innerHTML = '';
 
@@ -754,10 +685,7 @@ function renderAllTrajectories() {
     });
 }
 
-/**
- * 更新指定弹道的UI显示
- * @param {string} id - 弹道ID
- */
+// 更新指定弹道的UI显示
 function updateTrajectoryUI(id) {
     const trajectory = trajectories.find(t => t.id === id);
     if (!trajectory) return;
@@ -799,11 +727,7 @@ function updateTrajectoryUI(id) {
 
 /* ==================== 弹道操作 ==================== */
 
-/**
- * 创建新弹道
- * @param {Object|null} initialData - 初始数据（可选，用于从历史恢复）
- * @returns {Object} 创建的弹道对象
- */
+// 创建新弹道
 function createTrajectory(initialData = null) {
     const id = generateId();
     const trajectory = {
@@ -812,7 +736,7 @@ function createTrajectory(initialData = null) {
         charge: initialData?.charge || 1,
         angle: initialData?.angle || 0,
         forceCharge6: initialData?.forceCharge6 || false,
-        expanded: true,  // 新建弹道默认展开
+        expanded: true,
         createdAt: initialData?.createdAt || Date.now()
     };
     trajectories.push(trajectory);
@@ -828,22 +752,14 @@ function createTrajectory(initialData = null) {
     return trajectory;
 }
 
-/**
- * 删除弹道
- * @param {string} id - 弹道ID
- */
+// 删除弹道
 function deleteTrajectory(id) {
     trajectories = trajectories.filter(t => t.id !== id);
     renderAllTrajectories();
     attachTrajectoryEvents();
 }
 
-/**
- * 重新计算指定弹道的仰角并更新UI
- * @param {string} id - 弹道ID
- * @param {number} distance - 目标距离
- * @param {number} charge - 装药等级
- */
+// 重新计算指定弹道的仰角并更新UI
 function recalculate(id, distance, charge) {
     const trajectory = trajectories.find(t => t.id === id);
     if (!trajectory) return;
@@ -863,12 +779,7 @@ function recalculate(id, distance, charge) {
     }
 }
 
-/**
- * 更新装药选项的禁用状态
- * 根据距离和强制装药6选项，决定哪些装药可选
- * @param {string} id - 弹道ID
- * @param {number} distance - 目标距离
- */
+// 更新装药选项的禁用状态
 function updateChargeDisabled(id, distance) {
     const trajectory = trajectories.find(t => t.id === id);
     const force6 = trajectory?.forceCharge6 || false;
@@ -882,11 +793,7 @@ function updateChargeDisabled(id, distance) {
     }
 }
 
-/**
- * 自动选中推荐装药
- * @param {number} distance - 目标距离
- * @param {string} id - 弹道ID
- */
+// 自动选中推荐装药
 function autoSelectCharge(distance, id) {
     if (distance <= 0) return;
     const recommended = getRecommendedCharge(distance);
@@ -898,9 +805,7 @@ function autoSelectCharge(distance, id) {
 
 /* ==================== 事件绑定 ==================== */
 
-/**
- * 绑定所有弹道相关事件
- */
+// 绑定所有弹道相关事件
 function attachTrajectoryEvents() {
     // 展开/收起事件
     document.querySelectorAll('.trajectory-header').forEach(header => {
@@ -922,7 +827,7 @@ function attachTrajectoryEvents() {
     // 删除按钮事件
     document.querySelectorAll('.btn-delete').forEach(btn => {
         btn.onclick = (e) => {
-            e.stopPropagation();  // 阻止冒泡，避免触发收起事件
+            e.stopPropagation();
             const id = btn.dataset.id;
             if (confirm('确定要删除这条弹道吗？')) {
                 deleteTrajectory(id);
@@ -951,7 +856,7 @@ function attachTrajectoryEvents() {
                     trajectory.expanded = false;
                     card.classList.remove('expanded');
                 }
-                input.blur();  // 移除焦点
+                input.blur();
             }
         };
     });
@@ -980,11 +885,7 @@ function attachTrajectoryEvents() {
     });
 }
 
-/**
- * 获取指定弹道当前选中的装药
- * @param {string} id - 弹道ID
- * @returns {number} 选中的装药等级
- */
+// 获取指定弹道当前选中的装药
 function getSelectedCharge(id) {
     const radio = document.querySelector(`input[name="charge-${id}"]:checked`);
     return radio ? parseInt(radio.value) : 1;
@@ -992,9 +893,7 @@ function getSelectedCharge(id) {
 
 /* ==================== 历史记录 ==================== */
 
-/**
- * 渲染历史记录列表
- */
+// 渲染历史记录列表
 function renderHistoryList() {
     if (history.length === 0) {
         historyList.innerHTML = '<div class="history-empty">暂无历史记录</div>';
@@ -1026,26 +925,20 @@ function renderHistoryList() {
     });
 }
 
-/**
- * 打开历史记录侧边栏
- */
+// 打开历史记录侧边栏
 function openHistory() {
     renderHistoryList();
     historyOverlay.classList.add('show');
     historySidebar.classList.add('show');
 }
 
-/**
- * 关闭历史记录侧边栏
- */
+// 关闭历史记录侧边栏
 function closeHistory() {
     historyOverlay.classList.remove('show');
     historySidebar.classList.remove('show');
 }
 
-/**
- * 清空所有历史记录
- */
+// 清空所有历史记录
 function clearAllHistory() {
     if (confirm('确定要清空所有历史记录吗？')) {
         history = [];
@@ -1056,13 +949,11 @@ function clearAllHistory() {
 
 /* ==================== 初始化 ==================== */
 
-/**
- * 初始化应用
- */
+// 初始化应用
 function init() {
-    loadHistory();          // 加载历史记录
-    renderAllTrajectories(); // 渲染弹道列表
-    attachTrajectoryEvents(); // 绑定事件
+    loadHistory();
+    renderAllTrajectories();
+    attachTrajectoryEvents();
 
     // 如果没有弹道，创建一个空白弹道
     if (trajectories.length === 0) {
@@ -1071,11 +962,11 @@ function init() {
 }
 
 /* ==================== 全局事件绑定 ==================== */
-btnNew.onclick = () => createTrajectory();      // 新建按钮
-btnHistory.onclick = openHistory;               // 历史按钮
-btnCloseHistory.onclick = closeHistory;         // 关闭按钮
-btnClearHistory.onclick = clearAllHistory;      // 清空按钮
-historyOverlay.onclick = closeHistory;          // 点击遮罩关闭
+btnNew.onclick = () => createTrajectory();
+btnHistory.onclick = openHistory;
+btnCloseHistory.onclick = closeHistory;
+btnClearHistory.onclick = clearAllHistory;
+historyOverlay.onclick = closeHistory;
 
 // 启动应用
 init();
