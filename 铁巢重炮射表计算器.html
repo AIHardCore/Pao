@@ -711,11 +711,6 @@ function renderTrajectory(trajectory, index) {
                            placeholder="例如: 12.5" step="0.01" min="0" max="100" data-id="${trajectory.id}">
                 </div>
                 <div class="form-group">
-                    <label>限定仰角 (度):</label>
-                    <input type="number" class="input-max-angle" value="${trajectory.maxAngle || 60}"
-                           placeholder="例如: 60" step="1" min="1" max="60" data-id="${trajectory.id}">
-                </div>
-                <div class="form-group">
                     <label>方位角 (度):</label>
                     <input type="number" class="input-azimuth" value="${trajectory.azimuth || ''}"
                            placeholder="例如: 45" step="1" min="0" max="360" data-id="${trajectory.id}">
@@ -741,6 +736,11 @@ function renderTrajectory(trajectory, index) {
                             </div>
                         `).join('')}
                     </div>
+                </div>
+                <div class="form-group">
+                    <label>限定仰角 (度，可选):</label>
+                    <input type="number" class="input-max-angle" value="${trajectory.maxAngle || ''}"
+                           placeholder="不填则使用60°" step="1" min="1" max="60" data-id="${trajectory.id}">
                 </div>
                 <div class="result-box">
                     <div class="result-label">计算得出仰角</div>
@@ -895,6 +895,7 @@ function recalculate(id, distance, charge) {
 function updateChargeDisabled(id, distance, maxAngle) {
     const trajectory = trajectories.find(t => t.id === id);
     const force6 = trajectory?.forceCharge6 || false;
+    const angleLimit = maxAngle || 60;
 
     for (let i = 1; i <= 6; i++) {
         const radio = document.getElementById(`zy${i}-${id}`);
@@ -1018,13 +1019,14 @@ function attachTrajectoryEvents() {
     document.querySelectorAll('.input-max-angle').forEach(input => {
         input.oninput = (e) => {
             const id = input.dataset.id;
-            const maxAngle = parseFloat(e.target.value) || 60;
+            const inputValue = parseFloat(e.target.value);
+            const maxAngle = isNaN(inputValue) ? null : inputValue;
             const trajectory = trajectories.find(t => t.id === id);
             if (trajectory) {
                 trajectory.maxAngle = maxAngle;
                 const distance = parseFloat(document.querySelector(`.input-distance[data-id="${id}"]`)?.value) || 0;
-                updateChargeDisabled(id, distance, maxAngle);
-                autoSelectCharge(distance, id, maxAngle);
+                updateChargeDisabled(id, distance, maxAngle || 60);
+                autoSelectCharge(distance, id, maxAngle || 60);
                 recalculate(id, distance, getSelectedCharge(id));
             }
         };
