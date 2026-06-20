@@ -12,7 +12,8 @@
       "Bash(git commit -m 'style: 增大收起标签信息的样式 *)",
       "Bash(git commit -m 'style: 装药标签增大字体并加空格间隔 *)",
       "Bash(git commit -m 'feat: 添加方位角参数 *)",
-      "Bash(git commit -m 'feat: 标签信息显示方位角 *)"
+      "Bash(git commit -m 'feat: 标签信息显示方位角 *)",
+      "Bash(git commit -m 'style: 方位角输入框放到距离后面 *)"
     ]
   }
 }
