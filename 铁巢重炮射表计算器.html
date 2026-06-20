@@ -173,6 +173,12 @@
             font-size: 15px;
         }
 
+        .trajectory-card:not(.expanded) .trajectory-title .info-tag-azimuth {
+            background-color: #8e44ad;
+            color: white;
+            border-color: #6c3483;
+        }
+
         .trajectory-actions {
             display: flex;
             gap: 8px;
@@ -661,6 +667,7 @@ function renderTrajectory(trajectory, index) {
             <div class="trajectory-title">
                 <span class="arrow">▶</span>
                 <span>弹道 #${index + 1}</span>
+                <span class="info-tag info-tag-azimuth">${trajectory.azimuth || 0}°</span>
                 <span class="info-tag info-tag-distance">${trajectory.distance} km</span>
                 <span class="info-tag info-tag-angle">${trajectory.angle.toFixed(2)}°</span>
                 <span class="info-tag info-tag-charge">装药 ${trajectory.charge}</span>
@@ -754,6 +761,7 @@ function updateTrajectoryUI(id) {
     titleSpan.innerHTML = `
         <span class="arrow">▶</span>
         <span>弹道 #${index + 1}</span>
+        <span class="info-tag info-tag-azimuth">${trajectory.azimuth || 0}°</span>
         <span class="info-tag info-tag-distance">${trajectory.distance} km</span>
         <span class="info-tag info-tag-angle">${trajectory.angle.toFixed(2)}°</span>
         <span class="info-tag info-tag-charge">装药 ${trajectory.charge}</span>
