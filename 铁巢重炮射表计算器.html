@@ -956,6 +956,25 @@ function attachTrajectoryEvents() {
                 trajectory.azimuth = azimuth;
             }
         };
+
+        // 回车键：收起当前并新建弹道
+        input.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+                const id = input.dataset.id;
+                const trajectory = trajectories.find(t => t.id === id);
+                const card = document.querySelector(`.trajectory-card[data-id="${id}"]`);
+                if (trajectory && card && trajectory.expanded) {
+                    trajectory.expanded = false;
+                    card.classList.remove('expanded');
+                }
+                input.blur();
+                const newTraj = createTrajectory();
+                setTimeout(() => {
+                    const newInput = document.querySelector(`.input-distance[data-id="${newTraj.id}"]`);
+                    if (newInput) newInput.focus();
+                }, 0);
+            }
+        };
     });
 
     // 装药选择事件
