@@ -539,6 +539,32 @@ function calcMaxDist(charge) {
     return MAX_ANGLE / config[charge].factor;
 }
 
+/**
+ * 根据限定仰角计算指定装药的最大可用距离
+ * @param {number} charge - 装药等级(1-6)
+ * @param {number} maxAngle - 限定仰角
+ * @returns {number} 最大可用距离(公里)
+ */
+function calcMaxDistByAngle(charge, maxAngle) {
+    return maxAngle / config[charge].factor;
+}
+
+/**
+ * 根据距离和限定仰角获取推荐装药
+ * @param {number} distance - 目标距离(公里)
+ * @param {number} maxAngle - 限定仰角(度)
+ * @returns {number} 推荐装药等级(1-6)
+ */
+function getRecommendedChargeByAngle(distance, maxAngle) {
+    if (distance <= 0) return 1;
+    for (let i = 1; i <= 6; i++) {
+        if (distance <= calcMaxDistByAngle(i, maxAngle)) {
+            return i;
+        }
+    }
+    return 6;
+}
+
 // 根据60度限制更新各装药的最大距离
 config[1].max = calcMaxDist(1);
 config[2].max = calcMaxDist(2);
@@ -612,6 +638,7 @@ function addToHistory(trajectory) {
         id: trajectory.id,
         distance: trajectory.distance,
         azimuth: trajectory.azimuth,
+        maxAngle: trajectory.maxAngle,
         charge: trajectory.charge,
         angle: trajectory.angle,
         createdAt: trajectory.createdAt
@@ -682,6 +709,11 @@ function renderTrajectory(trajectory, index) {
                     <label>输入目标距离 (KM):</label>
                     <input type="number" class="input-distance" value="${trajectory.distance || ''}"
                            placeholder="例如: 12.5" step="0.01" min="0" max="100" data-id="${trajectory.id}">
+                </div>
+                <div class="form-group">
+                    <label>限定仰角 (度):</label>
+                    <input type="number" class="input-max-angle" value="${trajectory.maxAngle || 60}"
+                           placeholder="例如: 60" step="1" min="1" max="60" data-id="${trajectory.id}">
                 </div>
                 <div class="form-group">
                     <label>方位角 (度):</label>
@@ -801,6 +833,7 @@ function createTrajectory(initialData = null) {
         id,
         distance: initialData?.distance || 0,
         azimuth: initialData?.azimuth || 0,
+        maxAngle: initialData?.maxAngle || 60,
         charge: initialData?.charge || 1,
         angle: initialData?.angle || 0,
         forceCharge6: initialData?.forceCharge6 || false,
@@ -854,18 +887,19 @@ function recalculate(id, distance, charge) {
 
 /**
  * 更新装药选项的禁用状态
- * 根据距离和强制装药6选项，决定哪些装药可选
+ * 根据距离、限定仰角和强制装药6选项，决定哪些装药可选
  * @param {string} id - 弹道ID
  * @param {number} distance - 目标距离
+ * @param {number} maxAngle - 限定仰角
  */
-function updateChargeDisabled(id, distance) {
+function updateChargeDisabled(id, distance, maxAngle) {
     const trajectory = trajectories.find(t => t.id === id);
     const force6 = trajectory?.forceCharge6 || false;
 
     for (let i = 1; i <= 6; i++) {
         const radio = document.getElementById(`zy${i}-${id}`);
         if (radio) {
-            radio.disabled = !force6 && distance > config[i].max;
+            radio.disabled = !force6 && distance > calcMaxDistByAngle(i, maxAngle);
         }
     }
 }
@@ -874,10 +908,11 @@ function updateChargeDisabled(id, distance) {
  * 自动选中推荐装药
  * @param {number} distance - 目标距离
  * @param {string} id - 弹道ID
+ * @param {number} maxAngle - 限定仰角
  */
-function autoSelectCharge(distance, id) {
+function autoSelectCharge(distance, id, maxAngle) {
     if (distance <= 0) return;
-    const recommended = getRecommendedCharge(distance);
+    const recommended = getRecommendedChargeByAngle(distance, maxAngle);
     const radio = document.getElementById(`zy${recommended}-${id}`);
     if (radio) {
         radio.checked = true;
@@ -921,8 +956,10 @@ function attachTrajectoryEvents() {
         input.oninput = (e) => {
             const id = input.dataset.id;
             const distance = parseFloat(e.target.value) || 0;
-            updateChargeDisabled(id, distance);
-            autoSelectCharge(distance, id);
+            const trajectory = trajectories.find(t => t.id === id);
+            const maxAngle = trajectory?.maxAngle || 60;
+            updateChargeDisabled(id, distance, maxAngle);
+            autoSelectCharge(distance, id, maxAngle);
             recalculate(id, distance, getSelectedCharge(id));
         };
 
@@ -977,6 +1014,22 @@ function attachTrajectoryEvents() {
         };
     });
 
+    // 限定仰角输入事件
+    document.querySelectorAll('.input-max-angle').forEach(input => {
+        input.oninput = (e) => {
+            const id = input.dataset.id;
+            const maxAngle = parseFloat(e.target.value) || 60;
+            const trajectory = trajectories.find(t => t.id === id);
+            if (trajectory) {
+                trajectory.maxAngle = maxAngle;
+                const distance = parseFloat(document.querySelector(`.input-distance[data-id="${id}"]`)?.value) || 0;
+                updateChargeDisabled(id, distance, maxAngle);
+                autoSelectCharge(distance, id, maxAngle);
+                recalculate(id, distance, getSelectedCharge(id));
+            }
+        };
+    });
+
     // 装药选择事件
     document.querySelectorAll('input[name^="charge-"]').forEach(radio => {
         radio.onchange = (e) => {
@@ -993,7 +1046,8 @@ function attachTrajectoryEvents() {
             const trajectory = trajectories.find(t => t.id === id);
             if (trajectory) {
                 trajectory.forceCharge6 = e.target.checked;
-                updateChargeDisabled(id, trajectory.distance);
+                const maxAngle = trajectory.maxAngle || 60;
+                updateChargeDisabled(id, trajectory.distance, maxAngle);
                 const distance = parseFloat(document.querySelector(`.input-distance[data-id="${id}"]`)?.value) || 0;
                 recalculate(id, distance, getSelectedCharge(id));
             }
@@ -1026,7 +1080,7 @@ function renderHistoryList() {
     historyList.innerHTML = history.map((h, i) => `
         <div class="history-item" data-index="${i}">
             <div class="history-item-title">弹道 #${i + 1}</div>
-            <div>方位角: ${h.azimuth || 0}° | 距离: ${h.distance} km | 装药: ${h.charge}</div>
+            <div>方位角: ${h.azimuth || 0}° | 距离: ${h.distance} km | 装药: ${h.charge} | 限定: ${h.maxAngle || 60}°</div>
             <div class="history-item-angle">${h.angle.toFixed(2)}°</div>
             <div class="history-item-meta">${formatTime(h.createdAt)}</div>
         </div>
@@ -1040,6 +1094,7 @@ function renderHistoryList() {
             createTrajectory({
                 distance: record.distance,
                 azimuth: record.azimuth,
+                maxAngle: record.maxAngle,
                 charge: record.charge,
                 angle: record.angle,
                 createdAt: Date.now()
